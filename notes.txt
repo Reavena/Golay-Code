@@ -1,0 +1,40 @@
+Golejaus kodas C23. Taiso 3 arba maziau klaidu.
+
+Kodavimas = matrica x vektorius
+Vektoriaus eilute ilgio 12 dauginama is G23. Rezultatas ilgio 23 vektorius.
+
+G  (12 x 23) = [I12, B]   B= 12 x 11  I = 12 x 12  
+
+       B 
+            [1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0],
+            [1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1],
+            [0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1],
+            [1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0],
+            [1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1],
+            [1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1],
+            [0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1],
+            [0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0],
+            [0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0],
+            [1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0],
+            [0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]] # B(12x11)
+
+        B12 = 
+            [1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1],
+            [1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1],
+            [0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1],
+            [1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1],
+            [1, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1],
+            [1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1],
+            [0, 0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 1],
+            [0, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1],
+            [0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1],
+            [1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1],
+            [0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0]] # B(12x12)
+
+
+Dekodavimas, dekoduojame 23 ilgio vektoriu. w gautas kodas, v  pasiustas kanale ,u klaidu vektorius  v  = w + u
+1. Prirasome arba 0 arba 1 kad svoris (vienetu skaicius) butu NELYGINIS. Gauname ilgio 24 vektoriu su NELYG vienet skaiciu.
+2. Istaisom klaidas: 
+1. Apskaiciuojama C24 sindroma, s = w H.  H = kontroline matrica
