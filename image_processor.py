@@ -5,11 +5,11 @@ import encoding as en
 import decoding as de
 
 def process_image():
-    
     print("\n=== Image Processing ===")
-    
+
     # Ask for filename
     filename = input("Enter image filename: ")
+
     # Check probability
     try:
         p_input = input("Enter error probability p: ")
@@ -25,17 +25,17 @@ def process_image():
     try:
         load = Image.open(filename).convert('L')
         data = np.array(load)
-        
+
         print(f"Image loaded: {filename}")
         print(f"Image size: {data.shape}")
-        
+
         # Show original image
         print("\nOriginal image:")
         load.show()
 
         pictureArrayBinary = []
         arrayBinary = []
-        
+
         for i in range(len(data)):
             row = []
             for j in range(len(data[i])):
@@ -46,19 +46,20 @@ def process_image():
 
         len1 = len(pictureArrayBinary)
         len2 = len(pictureArrayBinary[0])
-
         padded_vectors, added_zeros = formatter.splitBinary(arrayBinary)
 
-        without_coding(padded_vectors, added_zeros, p, len1, len2, formatter)
-        with_coding(padded_vectors, added_zeros, p, len1, len2, formatter)
+        # Process without coding
+        process_without_coding(padded_vectors, added_zeros, p, len1, len2, formatter)
+
+        # Process with coding
+        process_with_coding(padded_vectors, added_zeros, p, len1, len2, formatter)
 
     except Exception as e:
         print(f"Error: {e}")
 
-
-def without_coding(padded_vectors, added_zeros, p, len1, len2, formatter):
+def process_without_coding(padded_vectors, added_zeros, p, len1, len2, formatter):
     print("\n--- Without coding ---")
-    
+
     received = []
     for vekt in padded_vectors:
         vekt_list = [int(d) for d in str(vekt)]
@@ -71,21 +72,20 @@ def without_coding(padded_vectors, added_zeros, p, len1, len2, formatter):
     print("Saved: image_no_code.bmp")
     pil_image.show()
 
-
-def with_coding(padded_vectors, added_zeros, p, len1, len2, formatter):
+def process_with_coding(padded_vectors, added_zeros, p, len1, len2, formatter):
     print("\n--- With coding ---")
-    
+
     encoded_list = []
     received_list = []
     decoded_list = []
-    
+
     for vekt in padded_vectors:
         vekt_list = [int(d) for d in str(vekt)]
-        
+
         # Pad to 12 bits if needed
         if vekt == 0:
             vekt_list.extend([0,0,0,0,0,0,0,0,0,0,0])
-        
+
         # Encode
         encoded_vector = en.encode(np.array(vekt_list, dtype=int))
         encoded_list.append(encoded_vector)
@@ -93,7 +93,7 @@ def with_coding(padded_vectors, added_zeros, p, len1, len2, formatter):
         # Transmit
         received_vector = en.transmit(encoded_vector, p)
         received_list.append(received_vector)
-        
+
         # Decode
         decoded_vector = de.decode(received_vector)
         decoded_list.append(decoded_vector)

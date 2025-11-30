@@ -33,7 +33,7 @@ def process_vector():
     print("\nDo you want to edit the received vector? (y/n)")
     if input().strip().lower() == 'y':
         print("Enter new vector (23 bits): ")
-        edited_str = input()
+        edited_str = input().replace(" ", "")  # Remove all spaces
         if len(edited_str) == 23 and all(c in '01' for c in edited_str):
             received_vector = [int(bit) for bit in edited_str]
             print(f"Edited vector: {received_vector}")

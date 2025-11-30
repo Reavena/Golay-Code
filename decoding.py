@@ -41,20 +41,20 @@ def find_errors(w):
     """
 
     # 1: Compute the syndrome s = wH 
-    s = np.dot(w,d.H) % 2
+    s = (w @ d.H) % 2
   #  print("w", w)
    # print("H", d.H)
   #  print("Syndrome", s)
 
     # 2: If wt(s) ≤ 3, then u = [s, 0]
-    if  np.sum(s) <= 3:
+    if  np.sum(s) <= 3: 
         u1 = s
         u2 = np.zeros(12, dtype=int)
         u = np.concatenate((u1, u2))
         return u
     
     # 3: If wt(s + b_i) ≤ 2 for some row b_i of B, then u = [s + b_i, e_i]
-    for i, b_i in enumerate(d.B12):              
+    for i, b_i in enumerate(d.B12):           
         s_plus_b_i = (s + b_i) % 2           
 
         if np.sum(s_plus_b_i) <= 2:          
@@ -76,13 +76,13 @@ def find_errors(w):
         return u
     
     # 6: If wt(sB + b_i) ≤ 2 for some row b_i of B, then u = [e_i, sB + b_i]
-    for i, b_i in enumerate(d.B12):              
+    for i, b_i in enumerate(d.B12):             
         s_plus_b_i = (sB + b_i) % 2           
 
-        if np.sum(s_plus_b_i) <= 2:          
+        if np.sum(s_plus_b_i) <= 2:       
             u1 = np.zeros(12, dtype=int)
             u2 = s_plus_b_i
-            u2[i] = 1                        
+            u1[i] = 1                        
 
             u = np.concatenate((u1, u2))     
             return u   
@@ -97,7 +97,6 @@ def decode(codeword):
         u = find_errors(w)
         if u is None:
             return None
-       # print("Error vector:", u)
 
         v = (w + u) % 2
 
