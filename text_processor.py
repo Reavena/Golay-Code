@@ -1,4 +1,3 @@
-import numpy as np
 import formatting as formatter
 import encoding as en
 import decoding as de
@@ -38,7 +37,7 @@ def without_coding(split_vectors, added_zeros, p):
     received = []
     for vekt in split_vectors:
         vekt_list = [int(d) for d in str(vekt)]
-        received_vect = en.transmit(np.array(vekt_list, dtype=int), p)
+        received_vect = en.transmit(vekt_list, p)
         received.append(received_vect)
     
     result = formatter.binaryToString(received, added_zeros)
@@ -55,7 +54,7 @@ def with_coding(split_vectors, added_zeros, p):
         vekt_list = [int(d) for d in str(vekt)]
         
         # Encode
-        encoded_vector = en.encode(np.array(vekt_list, dtype=int))
+        encoded_vector = en.encode(vekt_list)
         
         # Transmit
         received_vector= en.transmit(encoded_vector, p)

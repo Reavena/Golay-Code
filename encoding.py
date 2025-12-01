@@ -43,5 +43,5 @@ def encode(vector):
         raise ValueError(f"Input vector must be of length 12. Got length: {len(vector)}")
 
 
-    codeword = f.multiply_matrices(vector, d.G) % 2
+    codeword = f.multiply_matrices([vector], d.G) [0]
     return codeword

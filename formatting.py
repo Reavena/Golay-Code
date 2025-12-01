@@ -1,21 +1,5 @@
-import numpy as np
 import random
 
-def findDifferences(original, modified):
-    """
-    Find differences between original and modified vectors.
-
-    Args:
-        original: Original binary vector
-        modified: Modified binary vector
-
-    Returns:
-        Array of indices where elements don't match
-    """
-    orig_array = np.array(original).flatten()
-    mod_array = np.array(modified).flatten()
-    
-    return np.where(orig_array != mod_array)[0].tolist()
 
 def stringToBinary(text):
     """
@@ -51,7 +35,7 @@ def splitBinary(text):
 
     return splitList, addedZeros
 
-def binaryToString(binaryVectors, addedZeros):
+def binaryToString(decoded_list, addedZeros):
     """
     Convert binary vectors back to ASCII characters.
 
@@ -66,10 +50,10 @@ def binaryToString(binaryVectors, addedZeros):
     vectors = []
 
     # If vectors are length 23 (encoded), take only first 12 bits
-    if len(binaryVectors[0]) == 23:
-        vectors = [vec[:12] for vec in binaryVectors]
+    if len(decoded_list[0]) == 23:
+        vectors = [vec[:12] for vec in decoded_list]
     else:
-        vectors = binaryVectors
+        vectors = decoded_list
 
 
     string = []

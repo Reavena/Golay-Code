@@ -16,7 +16,7 @@ def add_matrices(A, B):
     for i in range(rows):
         row = []
         for j in range(cols):
-            row.append(A[i][j] + B[i][j] % 2)
+            row.append((A[i][j] + B[i][j]) % 2)
         result.append(row)
     return result
 

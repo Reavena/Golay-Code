@@ -34,12 +34,12 @@ def process_vector():
     print("\nDo you want to edit the received vector? (y/n)")
     if input().strip().lower() == 'y':
         print("Enter new vector (23 bits): ")
-        edited_str = input().replace(" ", "")  # Remove all spaces
+        edited_str = input().replace(" ", "").replace(",", "")  # Remove all spaces and commas
         if len(edited_str) == 23 and all(c in '01' for c in edited_str):
             received_vector = [int(bit) for bit in edited_str]
             print(f"Edited vector: {received_vector}")
             # Recalculate errors
-            errors = formatter.findDifferences([encoded_vector], [received_vector])
+            errors = [i for i, (a, b) in enumerate(zip(encoded_vector, received_vector)) if a != b]
             print(f"New error count: {len(errors)}")
         else:
             print("Error: Invalid vector format")
