@@ -1,4 +1,3 @@
-import numpy as np
 import formatting as formatter
 import encoding as en
 import decoding as de
@@ -18,7 +17,7 @@ def process_vector():
     print(f"\nOriginal vector: {vector}")
     
     # Encoding (no errors during encoding)
-    encoded_vector = en.encode(np.array(vector, dtype=int))
+    encoded_vector = en.encode(vector)
     print(f"Encoded vector:  {encoded_vector}")
     
     # Transmission through channel
@@ -26,7 +25,8 @@ def process_vector():
     print(f"Received vector: {received_vector}")
     
     # Error detection
-    errors = formatter.findDifferences([encoded_vector], [received_vector])
+    errors = [i for i, (a, b) in enumerate(zip(encoded_vector, received_vector)) if a != b]
+
     print(f"Number of errors: {len(errors)}")
     print(f"Error positions: {errors}")
     
@@ -48,7 +48,7 @@ def process_vector():
     decoded_vector = de.decode(received_vector)
     if decoded_vector is not None:
         print(f"Decoded vector: {decoded_vector}")
-        success = np.array_equal(decoded_vector, vector)
+        success = decoded_vector == vector
         print(f"Decoding success: {success}")
     else:
         print("Decoding failed - retransmission required")

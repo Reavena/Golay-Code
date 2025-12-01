@@ -27,8 +27,8 @@ def stringToBinary(text):
     Returns:
         Binary values of characters separated by spaces
     """
-    res = ' '.join(format(ord(x), 'b') for x in text)
-    return res
+    bin = ' '.join(format(ord(x), 'b') for x in text) 
+    return bin
 
 def splitBinary(text):
     """
@@ -45,11 +45,10 @@ def splitBinary(text):
     addedZeros = []
 
     for binary_value in text:
-            integer = binary_value
-            for _ in range(12 - len(binary_value)):
-                integer = integer + "0"
-            addedZeros.append(12 - len(binary_value))
-            splitList.append(int(integer))
+        padded = binary_value + "0" * (12 - len(binary_value))
+        addedZeros.append(12 - len(binary_value))
+        splitList.append(int(padded))
+
     return splitList, addedZeros
 
 def binaryToString(binaryVectors, addedZeros):
@@ -63,30 +62,32 @@ def binaryToString(binaryVectors, addedZeros):
     Returns:
         Decoded text string
     """
-    ascii_string = ""
-    receivedVectors = []
+    
+    vectors = []
 
     # If vectors are length 23 (encoded), take only first 12 bits
     if len(binaryVectors[0]) == 23:
-        for j in range(len(binaryVectors)):
-            receivedVectors.append(binaryVectors[j][0:12])
-    # If vectors are already length 12, use as is
-    elif len(binaryVectors[0]) == 12:
-        receivedVectors = binaryVectors
+        vectors = [vec[:12] for vec in binaryVectors]
+    else:
+        vectors = binaryVectors
 
-    # Convert each binary vector back to ASCII character
-    for i in range(len(receivedVectors)):
-        # Remove the padded zeros
-        cutZeros = receivedVectors[i][0:len(receivedVectors[i]) - addedZeros[i]]
-        
-        s = [str(i) for i in cutZeros] 
-        joinedInt = int("".join(s), 2) 
 
-        ascii_character = chr(joinedInt)
-        ascii_string += ascii_character
-    return ascii_string
+    string = []
+    for vec, zeros in zip(vectors, addedZeros):
+        #Remove padding zeros
+        cutZeros = vec[:len(vec) - zeros]  
+        # Convert list of bits to string
+        bit_string = "".join(map(str, cutZeros))  
+        # Convert binary string to integer
+        char_int = int(bit_string, 2)  
+        # Convert integer to ASCII character and add to list
+        string.append(chr(char_int))
 
-def formatBinaryForPicture(binaryVectors, addedZeros, height, width):
+    # Combine all characters into final string
+    return "".join(string)
+
+
+def formatBinaryPicture(binaryVectors, addedZeros, height, width):
     """
     Format binary vectors for image reconstruction.
 

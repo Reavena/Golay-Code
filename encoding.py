@@ -1,5 +1,7 @@
-import numpy as np
+
 import data as d
+import random as rand
+import functions as f
 
 def transmit(vector, p):
     """
@@ -12,8 +14,13 @@ def transmit(vector, p):
     Returns:
         The transmitted vector with errors introduced.
     """
-    errors = np.random.rand(len(vector)) < p
-    errored_vector = np.logical_xor(vector, errors).astype(int)
+    errored_vector = []
+    for bit in vector:
+        # Introduce an error with probability p
+        if rand.random() < p:
+            errored_vector.append(1 - bit)  # flip bit
+        else:
+            errored_vector.append(bit)
     return errored_vector
 
 def encode(vector):
@@ -32,11 +39,9 @@ def encode(vector):
     Raises:
         ValueError: If the input vector is longer than 12 bits.
     """
-    if len(vector) > 12:
-        raise ValueError(f"Input vector must be of length 12 or less. Got length: {len(vector)}")
+    if len(vector) != 12:
+        raise ValueError(f"Input vector must be of length 12. Got length: {len(vector)}")
 
-    if len(vector) < 12:
-        vector = np.pad(vector, (0, 12 - len(vector)), 'constant')
 
-    codeword = (vector @ d.G) % 2
+    codeword = f.multiply_matrices(vector, d.G) % 2
     return codeword

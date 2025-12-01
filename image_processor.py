@@ -66,7 +66,7 @@ def process_without_coding(split_vectors, added_zeros, p, rows, cols):
         received_vect = en.transmit(np.array(vekt_list, dtype=int), p)
         received.append(received_vect)
 
-    array = np.array(formatter.formatBinaryForPicture(received, added_zeros, rows, cols), dtype=np.uint8)
+    array = np.array(formatter.formatBinaryPicture(received, added_zeros, rows, cols), dtype=np.uint8)
     pil_image = Image.fromarray(array)
     pil_image.save("image_no_code.bmp")
     print("Saved: image_no_code.bmp")
@@ -94,7 +94,7 @@ def process_with_coding(split_vectors, added_zeros, p, rows, cols):
         decoded_vector = de.decode(received_vector)
         decoded_list.append(decoded_vector)
 
-    array = np.array(formatter.formatBinaryForPicture(decoded_list, added_zeros, rows, cols), dtype=np.uint8)
+    array = np.array(formatter.formatBinaryPicture(decoded_list, added_zeros, rows, cols), dtype=np.uint8)
     pil_image = Image.fromarray(array)
     pil_image.save("image_with_code.bmp")
     print("Saved: image_with_code.bmp")

@@ -1,4 +1,4 @@
-import numpy as np
+import functions as f
 import data as d
 
 
@@ -20,7 +20,7 @@ def extend_to_24_bits(codeword):
         raise ValueError("Input codeword must be of length 23.")
 
 
-    num_ones = np.sum(codeword)
+    num_ones = sum(codeword)
 
     if num_ones % 2 == 0:
         extended_bit = 1
@@ -28,7 +28,7 @@ def extend_to_24_bits(codeword):
         extended_bit = 0
 
     # Append the bit to the codeword
-    extended_codeword = np.append(codeword, extended_bit)
+    extended_codeword = codeword + extended_bit
 
     return extended_codeword
 
@@ -46,50 +46,50 @@ def find_errors(w):
     """
 
     # 1: Compute the syndrome s = wH 
-    s = (w @ d.H) % 2
+    s = f.multiply_matrices(w , d.H) 
   #  print("w", w)
    # print("H", d.H)
   #  print("Syndrome", s)
 
     # 2: If wt(s) ≤ 3, then u = [s, 0]
-    if  np.sum(s) <= 3: 
+    if  sum(s) <= 3: 
         u1 = s
-        u2 = np.zeros(12, dtype=int)
-        u = np.concatenate((u1, u2))
+        u2 = [0]*12
+        u = u1 + u2
         return u
     
     # 3: If wt(s + b_i) ≤ 2 for some row b_i of B, then u = [s + b_i, e_i]
     for i, b_i in enumerate(d.B12):           
-        s_plus_b_i = (s + b_i) % 2           
+        s_plus_b_i = f.add_matrices(s , b_i)            
 
-        if np.sum(s_plus_b_i) <= 2:          
+        if sum(s_plus_b_i) <= 2:          
             u1 = s_plus_b_i
-            u2 = np.zeros(12, dtype=int)
+            u2 = [0]*12
             u2[i] = 1                        
 
-            u = np.concatenate((u1, u2))  
+            u = u1 + u2
             return u
     
     # 4: Compute the second syndrome sB mod 2
-    sB = (s @ d.B12) % 2
+    sB = f.multiply_matrices(s , d.B12) 
 
     # 5: If wt(sB) ≤ 3, then u = [0, sB]
-    if  np.sum(sB) <= 3:
-        u1 = np.zeros(12, dtype=int)
+    if  sum(sB) <= 3:
+        u1 = [0]*12
         u2 = sB
-        u = np.concatenate((u1, u2))
+        u = u1+ u2
         return u
     
     # 6: If wt(sB + b_i) ≤ 2 for some row b_i of B, then u = [e_i, sB + b_i]
     for i, b_i in enumerate(d.B12):             
-        s_plus_b_i = (sB + b_i) % 2           
+        s_plus_b_i = f.add_matrices(sB , b_i)            
 
-        if np.sum(s_plus_b_i) <= 2:       
-            u1 = np.zeros(12, dtype=int)
+        if sum(s_plus_b_i) <= 2:       
+            u1 = [0]*12 
             u2 = s_plus_b_i
             u1[i] = 1                        
 
-            u = np.concatenate((u1, u2))     
+            u = u1 + u2    
             return u   
 
     # 7: If u is not yet determined then request retransmission
@@ -116,7 +116,7 @@ def decode(codeword):
     if u is None:
         return None
 
-    v = (w + u) % 2
+    v = f.add_matrices(w + u)
 
     #  print("Corrected vector:", v)
     return v[:12]
