@@ -27,16 +27,16 @@ def process_text():
         print("Error: Invalid probability value")
         return
 
-    padded_vectors, added_zeros = formatter.splitBinary(formatter.stringToBinary(text).split())
+    split_vectors, added_zeros = formatter.splitBinary(formatter.stringToBinary(text).split())
 
-    without_coding(padded_vectors, added_zeros, p, formatter)
-    with_coding(padded_vectors, added_zeros, p, formatter)
+    without_coding(split_vectors, added_zeros, p)
+    with_coding(split_vectors, added_zeros, p)
 
-def without_coding(padded_vectors, added_zeros, p, formatter):
+def without_coding(split_vectors, added_zeros, p):
     print("\n--- Without coding ---")
     
     received = []
-    for vekt in padded_vectors:
+    for vekt in split_vectors:
         vekt_list = [int(d) for d in str(vekt)]
         received_vect = en.transmit(np.array(vekt_list, dtype=int), p)
         received.append(received_vect)
@@ -46,12 +46,12 @@ def without_coding(padded_vectors, added_zeros, p, formatter):
     print(f"'{result}'")
     return result
 
-def with_coding(padded_vectors, added_zeros, p, formatter):
+def with_coding(split_vectors, added_zeros, p):
     print("\n--- With coding ---")
     
     decoded_list = []
     
-    for vekt in padded_vectors:
+    for vekt in split_vectors:
         vekt_list = [int(d) for d in str(vekt)]
         
         # Encode

@@ -32,10 +32,9 @@ B12 = np.array([
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0]
 ], dtype=int)
 
-# Generating matrix G23 [I12, B]
-I12 = np.eye(12, dtype=int)  # 12x12 identity matrix
+# Identity matrix
+I12 = np.eye(12, dtype=int)  # 12x12 
 
-# Concatenation of I and B
 G = np.hstack((I12, B)) # (12 x 23)
 
 H = np.vstack((I12, B12)) # 24 x 12

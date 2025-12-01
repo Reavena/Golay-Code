@@ -7,6 +7,7 @@ def process_vector():
     
     print("\n=== Vector Processing ===")
     vector_str = input("Enter vector (12 bits): ")
+    vector_str = vector_str.replace(" ", "")
     p = float(input("Enter error probability p (0.0-1.0): "))
     
     if len(vector_str) != 12 or not all(c in '01' for c in vector_str):

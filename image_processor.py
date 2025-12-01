@@ -29,12 +29,15 @@ def process_image():
         print(f"Image loaded: {filename}")
         print(f"Image size: {data.shape}")
 
+        
         # Show original image
         print("\nOriginal image:")
         load.show()
 
-        pictureArrayBinary = []
+
         arrayBinary = []
+        #Converts each pixel value to a binary string (without the '0b' prefix).
+        #arrayBinary is a 1D list containing all binary strings in a single list.
 
         for i in range(len(data)):
             row = []
@@ -42,49 +45,42 @@ def process_image():
                 a = bin(data[i][j])[2:]
                 row.append(a)
                 arrayBinary.append(a)
-            pictureArrayBinary.append(row)
 
-        len1 = len(pictureArrayBinary)
-        len2 = len(pictureArrayBinary[0])
-        padded_vectors, added_zeros = formatter.splitBinary(arrayBinary)
-
-        
-        process_without_coding(padded_vectors, added_zeros, p, len1, len2)
+        rows = data.shape[0]  # Number of rows
+        cols = data.shape[1]  # Number of columns
+        split_vectors, added_zeros = formatter.splitBinary(arrayBinary)
 
         
-        process_with_coding(padded_vectors, added_zeros, p, len1, len2)
+        process_without_coding(split_vectors, added_zeros, p, rows, cols)
+        process_with_coding(split_vectors, added_zeros, p, rows, cols)
 
     except Exception as e:
         print(f"Error: {e}")
 
-def process_without_coding(padded_vectors, added_zeros, p, len1, len2):
+def process_without_coding(split_vectors, added_zeros, p, rows, cols):
     print("\n--- Without coding ---")
 
     received = []
-    for vekt in padded_vectors:
+    for vekt in split_vectors:
         vekt_list = [int(d) for d in str(vekt)]
         received_vect = en.transmit(np.array(vekt_list, dtype=int), p)
         received.append(received_vect)
 
-    array = np.array(formatter.formatBinaryForPicture(received, added_zeros, len1, len2), dtype=np.uint8)
+    array = np.array(formatter.formatBinaryForPicture(received, added_zeros, rows, cols), dtype=np.uint8)
     pil_image = Image.fromarray(array)
     pil_image.save("image_no_code.bmp")
     print("Saved: image_no_code.bmp")
     pil_image.show()
 
-def process_with_coding(padded_vectors, added_zeros, p, len1, len2, formatter):
+def process_with_coding(split_vectors, added_zeros, p, rows, cols):
     print("\n--- With coding ---")
 
     encoded_list = []
     received_list = []
     decoded_list = []
 
-    for vekt in padded_vectors:
+    for vekt in split_vectors:
         vekt_list = [int(d) for d in str(vekt)]
-
-        # Pad to 12 bits if needed
-        if vekt == 0:
-            vekt_list.extend([0,0,0,0,0,0,0,0,0,0,0])
 
         # Encode
         encoded_vector = en.encode(np.array(vekt_list, dtype=int))
@@ -98,7 +94,7 @@ def process_with_coding(padded_vectors, added_zeros, p, len1, len2, formatter):
         decoded_vector = de.decode(received_vector)
         decoded_list.append(decoded_vector)
 
-    array = np.array(formatter.formatBinaryForPicture(decoded_list, added_zeros, len1, len2), dtype=np.uint8)
+    array = np.array(formatter.formatBinaryForPicture(decoded_list, added_zeros, rows, cols), dtype=np.uint8)
     pil_image = Image.fromarray(array)
     pil_image.save("image_with_code.bmp")
     print("Saved: image_with_code.bmp")

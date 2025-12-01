@@ -38,7 +38,7 @@ def splitBinary(text):
         text: Binary values of characters separated by spaces
 
     Returns:
-        padded_vectors: Padded vectors of length 12
+        splitList: Padded vectors of length 12
         addedZeros: Counts of added zeros for each vector
     """
     splitList = []
@@ -93,8 +93,8 @@ def formatBinaryForPicture(binaryVectors, addedZeros, height, width):
     Args:
         binaryVectors: Binary vectors to format
         addedZeros: Counts of added zeros for each vector
-        len1: Number of rows in original image
-        len2: Number of columns in original image
+        height: Number of rows in original image
+        width: Number of columns in original image
 
     Returns:
         Formatted list of coordinates for image reconstruction
@@ -122,23 +122,15 @@ def formatBinaryForPicture(binaryVectors, addedZeros, height, width):
             joinedInt = int("".join(s), 2) 
         intVect.append(joinedInt)
 
-    # Reshape into 2D array according to image dimensions
-    # Make sure we have exactly height * width elements
-    total_pixels_needed = height * width
     
-    if len(intVect) < total_pixels_needed:
-        # Pad with zeros if we don't have enough pixels
-        intVect.extend([0] * (total_pixels_needed - len(intVect)))
-    elif len(intVect) > total_pixels_needed:
-        # Truncate if we have too many pixels
-        intVect = intVect[:total_pixels_needed]
-    
-    # Reshape to exact dimensions
-    finalList = []
+    # Make from 1d to 2d list
+    imageRows = [] # 2d list with rows of the image
     for i in range(height):
-        start_idx = i * width
-        end_idx = start_idx + width
-        row = intVect[start_idx:end_idx]
-        finalList.append(row)
+        #Calculates the start and end indices in the 1d list (intVect) for the current row.
+        start = i * width
+        end = start + width
+        row = intVect[start:end]
+        
+        imageRows.append(row)
     
-    return finalList
+    return imageRows
