@@ -7,10 +7,13 @@ def extend_to_24_bits(codeword):
     Extend the codeword to 24 bits by appending a bit to make the total number of 1s odd.
 
     Args:
-        codeword: Input binary vector (numpy array) of length 23.
+        codeword: Input binary vector of length 23.
 
     Returns:
         Extended binary vector of length 24.
+        
+    Raises:
+        ValueError: If the input codeword is not of length 23.
     """
     # Check if the length of the codeword is 23
     if len(codeword) != 23:
@@ -31,13 +34,15 @@ def extend_to_24_bits(codeword):
 
 def find_errors(w):
     """
-    Perform syndrome decoding for the extended Golay code.
+    This function calculates the syndrome of the received word and attempts to find an error pattern.
+    Following the standard  decoding algorithm for the extended Golay code.
 
     Args:
         w: Received extended word (binary vector of length 24).
 
     Returns:
-        Corrected codeword or None if retransmission is needed.
+        Error pattern vector of length 24 if errors are found.
+        Returns None if errors cannot be determined and retransmission is needed.
     """
 
     # 1: Compute the syndrome s = wH 
@@ -91,14 +96,27 @@ def find_errors(w):
     return None
 
 def decode(codeword):
-        w = extend_to_24_bits(codeword)
-       # print("Extended vector:", w)
+    """
+    Decodes a received codeword using the extended Golay code error correction algorithm.
 
-        u = find_errors(w)
-        if u is None:
-            return None
+    This function extends the codeword to 24 bits, finds and corrects errors if possible,
+    and returns the first 12 bits of the corrected codeword.
 
-        v = (w + u) % 2
+    Args:
+        Received codeword (binary vector of length 23).
 
-      #  print("Corrected vector:", v)
-        return v[:12]
+    Returns:
+        Decoded 12-bit binary vector if successful.
+        Returns None if decoding fails and retransmission is needed.
+    """
+    w = extend_to_24_bits(codeword)
+    # print("Extended vector:", w)
+
+    u = find_errors(w)
+    if u is None:
+        return None
+
+    v = (w + u) % 2
+
+    #  print("Corrected vector:", v)
+    return v[:12]

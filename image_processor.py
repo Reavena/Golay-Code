@@ -12,7 +12,7 @@ def process_image():
 
     # Check probability
     try:
-        p_input = input("Enter error probability p: ")
+        p_input = input("Enter error probability p (0.0-1.0) : ")
         if "," in p_input:
             p = float(p_input.replace(',', '.'))
         else:
@@ -23,7 +23,7 @@ def process_image():
 
     # Load and process image
     try:
-        load = Image.open(filename).convert('L')
+        load = Image.open(filename).convert('L') #Grayscale
         data = np.array(load)
 
         print(f"Image loaded: {filename}")
@@ -48,16 +48,16 @@ def process_image():
         len2 = len(pictureArrayBinary[0])
         padded_vectors, added_zeros = formatter.splitBinary(arrayBinary)
 
-        # Process without coding
-        process_without_coding(padded_vectors, added_zeros, p, len1, len2, formatter)
+        
+        process_without_coding(padded_vectors, added_zeros, p, len1, len2)
 
-        # Process with coding
-        process_with_coding(padded_vectors, added_zeros, p, len1, len2, formatter)
+        
+        process_with_coding(padded_vectors, added_zeros, p, len1, len2)
 
     except Exception as e:
         print(f"Error: {e}")
 
-def process_without_coding(padded_vectors, added_zeros, p, len1, len2, formatter):
+def process_without_coding(padded_vectors, added_zeros, p, len1, len2):
     print("\n--- Without coding ---")
 
     received = []

@@ -18,7 +18,7 @@ def process_text():
     
     # Check if probability is correct
     try:
-        p_input = input("Enter error probability p: ")
+        p_input = input("Enter error probability p (0.0-1.0): ")
         if "," in p_input:
             p = float(p_input.replace(',', '.'))
         else:
