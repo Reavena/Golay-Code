@@ -3,6 +3,8 @@ from PIL import Image
 import formatting as formatter
 import encoding as en
 import decoding as de
+import time
+
 
 def process_image():
     print("\n=== Image Processing ===")
@@ -59,6 +61,7 @@ def process_image():
 
 def process_without_coding(split_vectors, added_zeros, p, rows, cols):
     print("\n--- Without coding ---")
+    start_time = time.time()
 
     received = []
     for vekt in split_vectors:
@@ -72,8 +75,12 @@ def process_without_coding(split_vectors, added_zeros, p, rows, cols):
     print("Saved: image_no_code.bmp")
     pil_image.show()
 
+    processing_time = time.time() - start_time
+    print(f"Processing time: {processing_time:.2f} seconds")
+
 def process_with_coding(split_vectors, added_zeros, p, rows, cols):
     print("\n--- With coding ---")
+    start_time = time.time()
 
     encoded_list = []
     received_list = []
@@ -99,3 +106,6 @@ def process_with_coding(split_vectors, added_zeros, p, rows, cols):
     pil_image.save("image_with_code.bmp")
     print("Saved: image_with_code.bmp")
     pil_image.show()
+
+    processing_time = time.time() - start_time
+    print(f"Processing time: {processing_time:.2f} seconds")

@@ -1,47 +1,58 @@
 import random
+import matplotlib.pyplot as plt
 import encoding as en
 import decoding as de
-import functions as f
-import data as d
 
-def flip_bits(vector, num_errors):
-    """Flip num_errors bits randomly in the vector."""
-    vector = vector.copy()
-    indices = random.sample(range(len(vector)), num_errors)
-    for idx in indices:
-        vector[idx] = 1 - vector[idx]  # flip 0 <-> 1
-    return vector
+def generate_random_vectors(num_vectors, length=12):
+    """Generate random binary vectors of given length."""
+    return [[random.randint(0, 1) for _ in range(length)] for _ in range(num_vectors)]
 
-def run_experiment(num_trials=10, max_errors=3):
-    failures = 0
+def test_success_rate(p, num_vectors=10000):
+    """Test the success rate of error correction for a given p."""
+    vectors = generate_random_vectors(num_vectors)
 
-    for trial in range(1, num_trials + 1):
-        # Generate random 12-bit vector
-        original = [random.randint(0, 1) for _ in range(12)]
+    # Without coding: success if no errors in first 12 bits
+    success_without_code = 0
+    for orig in vectors:
+        transmitted = en.transmit(orig, p)
+        if orig == transmitted:  # Compare the entire vector
+            success_without_code += 1
 
-        # Encode using your Golay encoder
-        codeword = en.encode(original)  # returns list of 23 bits
+    # With coding: encode, transmit, decode, and compare
+    success_with_code = 0
+    for orig in vectors:
+        encoded = en.encode(orig)
+        transmitted = en.transmit(encoded, p)
+        decoded = de.decode(transmitted)
+        if decoded is not None and decoded == orig:
+            success_with_code += 1
 
-        # Introduce random errors (0 to max_errors)
-        num_errors = random.randint(0, max_errors)
-        received = flip_bits(codeword, num_errors)
+    return success_without_code / num_vectors * 100, success_with_code / num_vectors * 100
 
-        # Decode
-        decoded = de.decode(received)
+def run_experiment():
+    """Run the experiment for p from 0 to 0.5 in 0.05 intervals."""
+    p_values = [i * 0.05 for i in range(11)]
+    success_without_code = []
+    success_with_code = []
 
-        # Check if decoding was successful
-        success = decoded == original
-        if not success:
-            failures += 1
-            print(f"Trial {trial}: FAILED")
-            print(f"Original: {original}")
-            print(f"Received: {received}")
-            print(f"Decoded:  {decoded}")
-            print(f"Errors introduced: {num_errors}\n")
-        else:
-            print(f"Trial {trial}: success (errors={num_errors})")
+    for p in p_values:
+        without, with_code = test_success_rate(p)
+        success_without_code.append(without)
+        success_with_code.append(with_code)
+        print(f"p = {p:.2f}: Without code = {without:.2f}%, With code = {with_code:.2f}%")
 
-    print(f"\nExperiment complete. Total failures: {failures} out of {num_trials}")
+    plot_results(p_values, success_without_code, success_with_code)
+
+def plot_results(p_values, success_without_code, success_with_code):
+    """Plot the success rates."""
+    plt.plot(p_values, success_without_code, label="Be kodo", marker='o')
+    plt.plot(p_values, success_with_code, label="Su kodu", marker='o')
+    plt.xlabel("Klaidos tikimybė p")
+    plt.ylabel("Sėkmingai atstatytų vektorių (%)")
+    plt.title("Dekodavimo tikslumas priklausomai nuo p (10,000 testų)")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
 
 if __name__ == "__main__":
     run_experiment()
