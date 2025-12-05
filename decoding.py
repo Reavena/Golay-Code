@@ -81,7 +81,6 @@ def find_errors(w):
     for i in range(len(d.B12)):
         s_plus_b_i = f.add_matrices([sB], [d.B12[i]])[0]
 
-
         if sum(s_plus_b_i) <= 2:       
             u1 = [0]*12 
             u2 = s_plus_b_i
@@ -108,7 +107,6 @@ def decode(codeword):
         Returns None if decoding fails and retransmission is needed.
     """
     w = extend_to_24_bits(codeword)
-    # print("Extended vector:", w)
 
     u = find_errors(w)
     if u is None:
@@ -116,5 +114,4 @@ def decode(codeword):
 
     v = f.add_matrices([w] , [u])[0]
 
-    #  print("Corrected vector:", v)
     return v[:12]
